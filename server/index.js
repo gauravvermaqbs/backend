@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const { Configuration, OpenAIApi } = require("openai");
+const { urlencoded } = require("express");
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 8080;
 
@@ -13,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/translate", async (req, res) => {
-  const { message, language,api_key } = req.body;
+  const { message, language, api_key } = req.body;
   const configuration = new Configuration({
     apiKey: api_key,
   });
@@ -24,8 +26,7 @@ app.post("/translate", async (req, res) => {
     max_tokens: 2048,
     temperature: 1,
   });
-  res.send(JSON.stringify(response.data));
-  // console.log(response.data)
+  res.send(response.data.choices[0].text);
 });
 
 app.listen(PORT, () => {

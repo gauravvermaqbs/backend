@@ -3,16 +3,29 @@ const cors = require("cors");
 const { Configuration, OpenAIApi } = require("openai");
 const { urlencoded } = require("express");
 const app = express();
+const path = require('path');
 
 app.use(express.json());
 app.use(cors());
 app.use(urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 8080;
+app.set('port', PORT);
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('/hello', function (req, res) {
+    res.send("hello")
+});
+// app.use('/predict', predictRouter);
+app.get('/', function (req, res) {
+    return res.sendFile(path.join(__dirname, "build", "index.html"))
+})
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+app.use("/", require('./routes/app.routes'));
 
 app.post("/translate", async (req, res) => {
   const { message, language, api_key } = req.body;
@@ -48,3 +61,5 @@ app.post("/textValidation", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
+
+

@@ -44,7 +44,6 @@ app.post("/translate", async (req, res) => {
 
 app.post("/textValidation", async (req, res) => {
   const { content, api_key,prompt } = req.body;
-  // console.log(content)
   const configuration = new Configuration({
     apiKey: api_key,
   });
@@ -56,6 +55,21 @@ app.post("/textValidation", async (req, res) => {
     temperature: 1,
   });
   res.send(correct_response.data.choices[0].text);
+});
+
+app.post("/assessmentCreator", async (req, res) => {
+  const { text, api_key } = req.body;
+  const configuration = new Configuration({
+    apiKey: api_key,
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: `Create multiple MCQ assessments and their answers from the data: ${text}`,
+    max_tokens: 2048,
+    temperature: 0.7,
+  });
+  res.send(response.data.choices[0].text);
 });
 
 app.listen(PORT, () => {

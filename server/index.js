@@ -3,29 +3,29 @@ const cors = require("cors");
 const { Configuration, OpenAIApi } = require("openai");
 const { urlencoded } = require("express");
 const app = express();
-const path = require('path');
+const path = require("path");
 
 app.use(express.json());
 app.use(cors());
 app.use(urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 8080;
-app.set('port', PORT);
+app.set("port", PORT);
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/hello', function (req, res) {
-    res.send("hello")
+app.use(express.static(path.join(__dirname, "public")));
+app.get("/hello", function (req, res) {
+  res.send("hello");
 });
 // app.use('/predict', predictRouter);
-app.get('/', function (req, res) {
-    return res.sendFile(path.join(__dirname, "build", "index.html"))
-})
+app.get("/", function (req, res) {
+  return res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.use("/", require('./routes/app.routes'));
+app.use("/", require("./routes/app.routes"));
 
 app.post("/translate", async (req, res) => {
   const { message, language, api_key } = req.body;
@@ -43,7 +43,7 @@ app.post("/translate", async (req, res) => {
 });
 
 app.post("/textValidation", async (req, res) => {
-  const { content, api_key,prompt } = req.body;
+  const { content, api_key, prompt } = req.body;
   const configuration = new Configuration({
     apiKey: api_key,
   });
@@ -58,16 +58,16 @@ app.post("/textValidation", async (req, res) => {
 });
 
 app.post("/assessmentCreator", async (req, res) => {
-  const { text, api_key } = req.body;
+  const { text, api_key, formatType } = req.body;
   const configuration = new Configuration({
     apiKey: api_key,
   });
   const openai = new OpenAIApi(configuration);
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `Create multiple MCQ assessments and their answers from the data: ${text}`,
+    prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
     max_tokens: 2048,
-    temperature: 0.7,
+    temperature: 1,
   });
   res.send(response.data.choices[0].text);
 });
@@ -75,5 +75,3 @@ app.post("/assessmentCreator", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
-
-

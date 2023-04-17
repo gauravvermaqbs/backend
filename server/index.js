@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 app.use(urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3080;
 app.set('port', PORT);
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -26,7 +26,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", require('./routes/app.routes'));
-
+app.use("/", require('./routes/routes'));
+app.use("/", require('./routes/article'))
+app.use("/", require('./routes/keysentence'))
 app.post("/translate", async (req, res) => {
   const { message, language, api_key } = req.body;
   const configuration = new Configuration({

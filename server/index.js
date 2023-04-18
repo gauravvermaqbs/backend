@@ -4,6 +4,7 @@ const { Configuration, OpenAIApi } = require("openai");
 const { urlencoded } = require("express");
 const app = express();
 const path = require("path");
+const { default: axios } = require("axios");
 
 app.use(express.json());
 app.use(cors());
@@ -70,6 +71,30 @@ app.post("/assessmentCreator", async (req, res) => {
     temperature: 1,
   });
   res.send(response.data.choices[0].text);
+});
+
+app.post("/visionMath", async (req, res) => {
+  const { url } = req.body;
+  const response = await axios.post(
+    "https://api.mathpix.com/v3/text",
+    {
+      src: url,
+      formats: ["text", "data", "html"],
+      data_options: {
+        include_asciimath: true,
+        include_latex: true,
+        include_mathml: true,
+      },
+    },
+    {
+      headers: {
+        app_id: "siby_sebastian_magicsw_com_d863e7",
+        app_key:
+          "6660944e6ec28e584cc4d4d9747e7c6ec4e9b5f3a5450b0c27de1371fc059981",
+      },
+    }
+  );
+  res.send(response.data);
 });
 
 app.listen(PORT, () => {

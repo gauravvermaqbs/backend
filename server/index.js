@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 app.use(urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 app.set("port", PORT);
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -18,9 +18,9 @@ app.get("/hello", function (req, res) {
   res.send("hello");
 });
 // app.use('/predict', predictRouter);
-app.get("/", function (req, res) {
-  return res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+// app.get("/", function (req, res) {
+//   return res.sendFile(path.join(__dirname, "build", "index.html"));
+// });
 
 app.get("/", (req, res) => {
   res.send("Hello World");

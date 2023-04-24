@@ -37,7 +37,7 @@ app.post("/translate", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `Translate this into ${language}: ${message}`,
-    max_tokens: 3800,
+    max_tokens: 2048,
     temperature: 0.7,
   });
   res.send(response.data.choices[0].text);
@@ -52,7 +52,7 @@ app.post("/textValidation", async (req, res) => {
   const correct_response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `${prompt} ${content}`,
-    max_tokens: 3800,
+    max_tokens: 2048,
     temperature: 1,
   });
   res.send(correct_response.data.choices[0].text);
@@ -67,7 +67,7 @@ app.post("/assessmentCreator", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
-    max_tokens: 3800,
+    max_tokens: 2048,
     temperature: 1,
   });
   res.send(response.data.choices[0].text);
@@ -106,7 +106,7 @@ app.post("/latexToText", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: `Convert Latex in words : ${latex}`,
-    max_tokens: 3800,
+    max_tokens: 2048,
     temperature: 1,
   });
   res.send(response.data.choices[0].text);

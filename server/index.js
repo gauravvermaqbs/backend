@@ -66,10 +66,11 @@ app.post("/assessmentCreator", async (req, res) => {
   const openai = new OpenAIApi(configuration);
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
+    // prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
+    prompt: `Create multiple, multiple choice questions and answers from ${text} in ${formatType}.`,
     max_tokens: 2048,
     temperature: 1,
-  });
+  });  
   res.send(response.data.choices[0].text);
 });
 

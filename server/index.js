@@ -113,6 +113,22 @@ app.post("/latexToText", async (req, res) => {
   res.send(response.data.choices[0].text);
 });
 
+app.post("/gradeAnswer", async (req, res) => {
+  const { question,answer, api_key } = req.body;
+  const configuration = new Configuration({
+    apiKey: api_key,
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    // prompt: `Give correct grades in percentage on the basis of answer:${answer} for the question:${question}`,
+    prompt: `Give grading for the question answer json out of 100: ${JSON.stringify({Question:question,Answer:answer})}`,
+    max_tokens: 2048,
+    temperature: 1,
+  });
+  res.send(response.data.choices[0].text);
+});
+
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });

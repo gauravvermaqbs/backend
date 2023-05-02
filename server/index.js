@@ -10,17 +10,13 @@ app.use(express.json());
 app.use(cors());
 app.use(urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 9000;
 app.set("port", PORT);
 
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/hello", function (req, res) {
   res.send("hello");
 });
-// app.use('/predict', predictRouter);
-// app.get("/", function (req, res) {
-//   return res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -51,7 +47,7 @@ app.post("/textValidation", async (req, res) => {
   const openai = new OpenAIApi(configuration);
   const correct_response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `${prompt} ${content}`,
+    prompt: `${prompt} ${content} `,
     max_tokens: 2048,
     temperature: 1,
   });
@@ -122,12 +118,15 @@ app.post("/gradeAnswer", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     // prompt: `Give correct grades in percentage on the basis of answer:${answer} for the question:${question}`,
-    prompt: `Give grading for the question answer json out of 100: ${JSON.stringify({Question:question,Answer:answer})}`,
+    prompt: `Give accurate grading from 0 to 5 only for Answer:${answer} for this Question:${question}`,
+    // prompt:`Please rate exact accuracy of the following answer on a scale of 0 to 5, where 0 represents the lowest score and 5 represents the highest score and give response in number only:
+    // Question: ${question}
+    // Answer: ${answer}`,
     max_tokens: 2048,
     temperature: 1,
   });
   res.send(response.data.choices[0].text);
-});
+}); 
 
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);

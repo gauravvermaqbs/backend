@@ -109,6 +109,22 @@ app.post("/latexToText", async (req, res) => {
   res.send(response.data.choices[0].text);
 });
 
+app.post("/convertToQuestion", async (req, res) => {
+  const { html, api_key } = req.body;
+  const configuration = new Configuration({
+    apiKey: api_key,
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: `Convert html code into normal text: ${html}`,
+    max_tokens: 2048,
+    temperature: 1,
+  });
+  // console.log(response.data.choices[0].text)
+  res.send(response.data.choices[0].text);
+});
+
 app.post("/gradeAnswer", async (req, res) => {
   const { question,answer, api_key } = req.body;
   const configuration = new Configuration({

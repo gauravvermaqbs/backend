@@ -5,6 +5,7 @@ const { urlencoded } = require("express");
 const app = express();
 const path = require("path");
 const { default: axios } = require("axios");
+const sgMail = require("@sendgrid/mail");
 
 app.use(express.json());
 app.use(cors());
@@ -55,7 +56,7 @@ app.post("/textValidation", async (req, res) => {
 });
 
 app.post("/assessmentCreator", async (req, res) => {
-  const { text, api_key, formatType } = req.body;
+  const { text, api_key, formatType,questionFormat,temperature } = req.body;
   const configuration = new Configuration({
     apiKey: api_key,
   });
@@ -63,10 +64,13 @@ app.post("/assessmentCreator", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     // prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
-    prompt: `Create multiple questions with multiple choices and answers from ${text} in ${formatType}.`,
+    prompt: `Create all posible ${questionFormat} and answers from ${text} in ${formatType}.`,
     max_tokens: 2048,
-    temperature: 1,
-  });  
+    temperature: temperature,
+    top_p:1.0,
+    frequency_penalty:0,
+    presence_penalty:0
+  });
   res.send(response.data.choices[0].text);
 });
 
@@ -126,7 +130,7 @@ app.post("/convertToQuestion", async (req, res) => {
 });
 
 app.post("/gradeAnswer", async (req, res) => {
-  const { question,answer, api_key } = req.body;
+  const { question, answer, api_key } = req.body;
   const configuration = new Configuration({
     apiKey: api_key,
   });
@@ -134,15 +138,40 @@ app.post("/gradeAnswer", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     // prompt: `Give correct grades in percentage on the basis of answer:${answer} for the question:${question}`,
-    prompt: `Give accurate grading from 0 to 5 only for Answer:${answer} for this Question:${question}`,
+    prompt: `Grade the answer from 0 to 5 based on its accuracy: \n\nQuestion:${question} \nAnswer:${answer} \n\nGrading:`,
     // prompt:`Please rate exact accuracy of the following answer on a scale of 0 to 5, where 0 represents the lowest score and 5 represents the highest score and give response in number only:
     // Question: ${question}
     // Answer: ${answer}`,
-    max_tokens: 2048,
-    temperature: 1,
+    max_tokens: 60,
+    temperature: 0,
+    top_p:1.0,
+    frequency_penalty:0,
+    presence_penalty:0
   });
   res.send(response.data.choices[0].text);
-}); 
+});
+
+app.post("/sendOtp", async (req, res) => {
+  const { email, otp } = req.body;
+  // console.log(email,otp)
+  sgMail.setApiKey(
+    "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"
+  );
+  const msg = {
+    to: email,
+    from: "noreply@qbslearning.com",
+    subject: "OTP Verification",
+    html: `<h1>Welcome to Content Pilot</h1>
+    <p>Your OTP is : <span><strong>${otp}</strong></span></p>`,
+    // text: `Your OTP is ${otp}`,
+  };
+  try {
+    await sgMail.send(msg);
+    console.log("OTP email sent successfully");
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);

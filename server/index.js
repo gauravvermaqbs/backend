@@ -8,7 +8,7 @@ const { default: axios } = require("axios");
 const sgMail = require("@sendgrid/mail");
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin: '*'}));
 app.use(urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 9000;
@@ -60,7 +60,7 @@ app.post("/assessmentCreator", async (req, res) => {
   const configuration = new Configuration({
     apiKey: api_key,
   });
-  
+
   const openai = new OpenAIApi(configuration);
   const response = await openai.createCompletion({
     model: "text-davinci-003",

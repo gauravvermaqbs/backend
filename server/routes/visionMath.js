@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config()
 
 router.post("/visionMath", async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
   const { url } = req.body;
   const response = await axios.post(
     "https://api.mathpix.com/v3/text",
@@ -29,6 +30,7 @@ router.post("/visionMath", async (req, res) => {
 });
 
 router.post("/latexToText", async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
   const { latex } = req.body;
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,

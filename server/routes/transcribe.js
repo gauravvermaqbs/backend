@@ -21,6 +21,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 router.post("/transcribe", uploadAudioVideo.single('audioClip'), async function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   const model = 'whisper-1'
   const response_format = 'srt'
   const includeTimestamps= "true"

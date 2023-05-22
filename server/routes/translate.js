@@ -6,6 +6,7 @@ dotenv.config()
 // console.log(process.env.OPENAI_API_KEY)
 
 router.post("/translate", async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     const { message, language } = req.body;
     console.log(message,language)
     const configuration = new Configuration({
@@ -19,6 +20,7 @@ router.post("/translate", async (req, res) => {
       temperature: 0.7,
     });
     res.send(response.data.choices[0].text);
+
   });
 
   module.exports = router

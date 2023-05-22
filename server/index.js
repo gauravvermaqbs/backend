@@ -60,6 +60,7 @@ app.post("/assessmentCreator", async (req, res) => {
   const configuration = new Configuration({
     apiKey: api_key,
   });
+  
   const openai = new OpenAIApi(configuration);
   const response = await openai.createCompletion({
     model: "text-davinci-003",

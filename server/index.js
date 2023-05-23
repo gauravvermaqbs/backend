@@ -8,12 +8,17 @@ const dotenv = require('dotenv');
 dotenv.config()
 
 app.use(express.json());
-app.use(cors({ origin: ['http://localhost:3000','https://ai-automation-production.netlify.app','https://ai.qbslearning.com/'] }));
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const PORT = process.env.PORT || 9000;
 app.set("port", PORT);
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");

@@ -13,7 +13,6 @@ const upload = multer();
 const api_key = process.env.api_key;
 const api_secret = process.env.api_secret;
 router.post("/color", upload.single("image"), async function (req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
   console.log(req.file);
   const formData = new FormData();
   formData.append("image", req.file.buffer, {

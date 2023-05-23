@@ -6,9 +6,8 @@ dotenv.config()
 // console.log(process.env.OPENAI_API_KEY)
 
 router.post("/translate", async (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
     const { message, language } = req.body;
-    console.log(message,language)
+    // console.log(message,language)
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });

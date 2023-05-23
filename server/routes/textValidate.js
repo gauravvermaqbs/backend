@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 dotenv.config()
 
 router.post("/textValidation", async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
     const { content, prompt } = req.body;
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,

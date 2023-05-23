@@ -13,10 +13,10 @@ router.post("/translate", async (req, res) => {
     });
     const openai = new OpenAIApi(configuration);
     const response = await openai.createCompletion({
-      model: "text-davinci-003",
+      model: "text-curie-001",
       prompt: `Translate this into ${language}: ${message}`,
-      max_tokens: 2048,
-      temperature: 0.7,
+      max_tokens: 256,
+      temperature: 0.6,
     });
     res.send(response.data.choices[0].text);
 

@@ -15,7 +15,7 @@ router.post("/assessmentCreator", async (req, res) => {
     model: "text-davinci-003",
     // prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
     prompt: `Create all posible ${questionFormat} and answers from ${text} in ${formatType}.`,
-    max_tokens: 2048,
+    max_tokens: 1500,
     temperature: temperature,
     top_p: 1.0,
     frequency_penalty: 0,

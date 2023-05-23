@@ -15,7 +15,7 @@ router.post("/translate", async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-curie-001",
       prompt: `Translate this into ${language}: ${message}`,
-      max_tokens: 256,
+      max_tokens: 1000,
       temperature: 0.6,
     });
     res.send(response.data.choices[0].text);

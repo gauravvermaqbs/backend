@@ -98,6 +98,7 @@ router.post("/video-transcription-json", uploadAudioVideo.single('video'), async
 
 })
 router.post("/transcribe-json", uploadAudioVideo.single('audioClip'), async function (req, res) {
+  res.header('Access-Control-Allow-Origin', '*');
   const model = 'whisper-1'
   
   console.log(req.file)

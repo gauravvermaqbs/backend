@@ -115,8 +115,8 @@ router.post(
   "/transcribe-json",
   uploadAudioVideo.single("audioClip"),
   async function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"
     );

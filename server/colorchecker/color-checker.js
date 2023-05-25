@@ -3,7 +3,7 @@
 /// Returns the relative luminance for a given color
 /// Parameters: r, g and b (both Int between 0 and 255)
 exports.getLuminance = function (r, g, b) {
-  // console.log(r, g,b)
+  // console.log("qq",r, g,b)
   r /= 255;
   g /= 255;
   b /= 255;
@@ -15,9 +15,23 @@ exports.getLuminance = function (r, g, b) {
 };
 
 exports.getContrastRatio = function (c1, c2) {
-  console.log(c1,c2)
-  let l1 = this.getLuminance(c1.r, c1.g, c1.b);
-  let l2 = this.getLuminance(c2.r, c2.g, c2.b);
+  // console.log(c1,c2)
+  const [r, g, b] = [c1[0], c1[1], c1[2]];
+  const [r1, g1, b1] = [c2[0], c2[1], c2[2]];
+  const colorObj1 = { r, g, b };
+  const colorObj2 = { r1, g1, b1 };
+  // const rgbArray = c1.map((r, index) => {
+  //   return {
+  //     r,
+  //     g: c2[index],
+  //     b: c2[index]
+  //   };
+  // });
+  // console.log(colorObj1)
+  // console.log(colorObj2)
+  
+  let l1 = this.getLuminance(colorObj1.r,colorObj1.g,colorObj1.b);
+  let l2 = this.getLuminance(colorObj2.r1,colorObj2.g1,colorObj2.b1);
   return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 };
 
@@ -78,8 +92,11 @@ exports.componentToHex = function(c) {
 // }
 
 exports.rgbToHex =function(x) {
-  // console.log(x.r,x.g,x.b)
-  var hex = "#" + ((1 << 24) + (x.r << 16) + (x.g << 8) + x.b).toString(16).slice(1);
+  // console.log(x)
+  const [r, g, b] = [x[0], x[1], x[2]];
+  const colorObj1 = { r, g, b };
+  // console.log("clr",colorObj1)
+  var hex = "#" + ((1 << 24) + (colorObj1.r << 16) + (colorObj1.g << 8) + colorObj1.b).toString(16).slice(1);
   // console.log(hex)
   return hex;
 }
@@ -90,3 +107,19 @@ exports.rgbToHex =function(x) {
 //   }
 //   return contrastRatio >= 4.5 ? "AA" : "";
 // });
+exports.hexToRgb =function(hex){
+  // Remove the # symbol if present
+  const hexcolor=[]
+  // console.log("mm",hex)
+  hex = hex.replace("#", "");
+
+  // Parse the hexadecimal components
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Return the RGB values as an object
+  hexcolor.push(r,g,b)
+  // console.log(hexcolor)
+  return hexcolor;
+}

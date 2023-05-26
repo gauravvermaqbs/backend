@@ -2,8 +2,8 @@ const express = require("express");
 const { Configuration, OpenAIApi } = require("openai");
 const router = express.Router();
 const { default: axios } = require("axios");
-const dotenv = require('dotenv');
-dotenv.config()
+const dotenv = require("dotenv");
+dotenv.config();
 
 router.post("/visionMath", async (req, res) => {
   const { url } = req.body;
@@ -43,5 +43,23 @@ router.post("/latexToText", async (req, res) => {
   res.send(response.data.choices[0].text);
 });
 
+// router.post("/visionMath/pdf", async (req, res) => {
+//   const { url } = req.body;
+//   const response = await axios.post(
+//     "https://api.mathpix.com/v3/pdf",
+//     {
+//       url: url,
+//       conversion_formats: { docx: true, "tex.zip": true },
+//     },
+//     {
+//       headers: {
+//         app_id: process.env.VISIONMATH_API_ID,
+//         app_key: process.env.VISIONMATH_API_KEY,
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+//   res.send(response.data);
+// });
 
-module.exports = router
+module.exports = router;

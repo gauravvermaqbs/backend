@@ -76,8 +76,8 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
           18
         );
         let report = {
-          background_color: colors[i].closest_palette_color_html_code,
-          foreground_color: colors[j].closest_palette_color_html_code,
+          background_color: colors[i].html_code,
+          foreground_color: colors[j].html_code,
           contrast_ratio: contrastRatio,
           normal_text: resultWithExistingFontSize,
           LargeText: resultWithLargeFontSize,

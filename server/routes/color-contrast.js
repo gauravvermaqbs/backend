@@ -39,8 +39,8 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
   });
   // const Authorization= 'Basic ' + Buffer.from(api_key + ':' + api_secret).toString('base64')
   const endpoint =
-    "https://api.imagga.com/v2/colors?overall_count=20&deterministic=1";
-  // const extract_object_colors='0'
+    "https://api.imagga.com/v2/colors";
+  // const extract_object_colors='0' 
 
   let response = await axios({
     method: "post",
@@ -55,7 +55,7 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
   });
   let colors = response.data.result.colors.image_colors;
   console.log(colors);
-  colors = colors.filter((color) => color.percent >= 3);
+//   colors = colors.filter((color) => color.percent >= 3);
   let contrast_report = [];
   for (let i = 0; i < colors.length; i++) {
     for (let j = 0; j < colors.length; j++) {
@@ -83,7 +83,7 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
           normal_text: resultWithExistingFontSize,
           LargeText: resultWithLargeFontSize,
         };
-        // console.log(report);
+        // console.log(report); 
         pushIfNotExists(contrast_report, report);
       }
     }

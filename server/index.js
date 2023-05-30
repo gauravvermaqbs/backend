@@ -38,6 +38,7 @@ app.use("/", require("./routes/textValidate"))
 app.use("/", require("./routes/assessmentCreator"))
 app.use("/", require("./routes/visionMath"))
 app.use("/", require("./routes/smartGrade"))
+app.use("/", require("./routes/color-contrast"))
 
 
 app.post("/convertToQuestion", async (req, res) => {

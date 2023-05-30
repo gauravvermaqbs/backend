@@ -15,6 +15,8 @@ const KMeans = require("node-kmeans");
 const Color = require("color");
 const { resolve } = require("path");
 const cloudinary = require("cloudinary").v2;
+const sharp = require("sharp");
+const { Vibrant } = require("node-vibrant");
 // const dotenv=require('dotenv');
 
 // dotenv.config();
@@ -28,7 +30,7 @@ cloudinary.config({
 const api_key = process.env.api_key;
 const api_secret = process.env.api_secret;
 const app = new Clarifai.App({
-  apiKey: "394ffbd298d74b1583d8f242a23967ac",
+  apiKey: "394ffbd298d74b1583d8f242a23967ac", 
 });
 router.post("/color", upload.single("image"), async function (req, res) {
   console.log(req.file);
@@ -37,7 +39,7 @@ router.post("/color", upload.single("image"), async function (req, res) {
     filename: req.file.originalname,
   });
   // const Authorization= 'Basic ' + Buffer.from(api_key + ':' + api_secret).toString('base64')
-  const endpoint = "https://api.imagga.com/v2/colors";
+  const endpoint = "https://api.imagga.com/v2/colors?overall_count=20&deterministic=1";
   // const extract_object_colors='0'
 
   await axios({
@@ -49,7 +51,7 @@ router.post("/color", upload.single("image"), async function (req, res) {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     data: formData,
-    extract_overall_colors: false,
+    // extract_overall_colors: false,
   })
     .then((response) => {
       const result = response.data.result.colors;
@@ -497,7 +499,8 @@ const kmeans = async (colorarray) => {
             }
           }
         );
-      } if (colorarray.length >= 4) {
+      }
+      if (colorarray.length >= 4) {
         const numForegroundColors = 5;
         KMeans.clusterize(
           colorarray,
@@ -556,30 +559,29 @@ router.post(
     const base64 = Buffer.from(req.file.buffer).toString("base64");
     const url = `data:image/jpeg;base64,${base64}`;
     const response = await uploads(url);
-    try{
-    // const response = await uploads(url);
-    const img = response.secure_url;
-    const extractedColor = await extractColors(img);
-    const rawHexArray = extractedColor.map((color) => color.raw_hex);
-    console.log(rawHexArray);
-    const colorarray = [];
-    for (let i = 0; i < rawHexArray.length; i++) {
-      const hexcolor = colorChecker.hexToRgb(rawHexArray[i]);
-      colorarray.push(hexcolor);
+    try {
+      // const response = await uploads(url);
+      const img = response.secure_url;
+      const extractedColor = await extractColors(img);
+      const rawHexArray = extractedColor.map((color) => color.raw_hex);
+      console.log(rawHexArray);
+      const colorarray = [];
+      for (let i = 0; i < rawHexArray.length; i++) {
+        const hexcolor = colorChecker.hexToRgb(rawHexArray[i]);
+        colorarray.push(hexcolor);
+      }
+      const kmeansCluster = await kmeans(colorarray);
+      console.log("image", img);
+      res.send(kmeansCluster);
+    } catch (error) {
+      console.log(error);
+      console.log("aa", response);
+    } finally {
+      cloudinary.uploader.destroy(response.public_id).then(() => {
+        console.log("deleted");
+      });
     }
-    const kmeansCluster = await kmeans(colorarray);
-    console.log("image", img)
-    res.send(kmeansCluster);
-  }catch(error){ 
-    console.log(error);
-    console.log("aa",response)
-  } finally{
-    cloudinary.uploader.destroy(response.public_id)
-    .then(()=>{
-      console.log("deleted")
-    })
   }
-  
-})
+);
 
 module.exports = router;

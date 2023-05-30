@@ -54,13 +54,14 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
     // extract_overall_colors: false,
   });
   let colors = response.data.result.colors.image_colors;
-  console.log(colors)
+  console.log(colors);
+  colors = colors.filter((color) => color.percent >= 3);
   let contrast_report = [];
   for (let i = 0; i < colors.length; i++) {
     for (let j = 0; j < colors.length; j++) {
       if (i !== j) {
-        let backcolorRGB=[colors[i].r,colors[i].g,colors[i].b]
-        let foregroundColorsRGB=[colors[j].r,colors[j].g,colors[j].b]
+        let backcolorRGB = [colors[i].r, colors[i].g, colors[i].b];
+        let foregroundColorsRGB = [colors[j].r, colors[j].g, colors[j].b];
         const contrastRatio = colorChecker.getContrastRatio(
           backcolorRGB,
           foregroundColorsRGB
@@ -83,17 +84,17 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
           LargeText: resultWithLargeFontSize,
         };
         // console.log(report);
-        pushIfNotExists(contrast_report,report)
+        pushIfNotExists(contrast_report, report);
       }
     }
   }
-  res.send(contrast_report)
+  res.send(contrast_report);
 });
 
 function pushIfNotExists(array, object) {
-    if (!array.some(item => item.contrast_ratio === object.contrast_ratio)) {
-      array.push(object);
-    }
+  if (!array.some((item) => item.contrast_ratio === object.contrast_ratio)) {
+    array.push(object);
   }
+}
 
 module.exports = router;

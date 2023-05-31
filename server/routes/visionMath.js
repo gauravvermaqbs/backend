@@ -3,6 +3,7 @@ const { Configuration, OpenAIApi } = require("openai");
 const router = express.Router();
 const { default: axios } = require("axios");
 const dotenv = require("dotenv");
+const { get } = require("https");
 dotenv.config();
 
 router.post("/visionMath", async (req, res) => {
@@ -29,18 +30,11 @@ router.post("/visionMath", async (req, res) => {
 });
 
 router.post("/latexToText", async (req, res) => {
-  const { latex } = req.body;
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-  const openai = new OpenAIApi(configuration);
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: `Convert Latex in words : ${latex}`,
-    max_tokens: 2048,
-    temperature: 1,
-  });
-  res.send(response.data.choices[0].text);
+  const { mathml } = req.body;
+  let response = await axios.get(
+    `https://www.wiris.net/demo/editor/mathml2accessible?mml=${mathml}`
+  );
+  res.send(response.data);
 });
 
 // router.post("/visionMath/pdf", async (req, res) => {

@@ -37,6 +37,24 @@ router.post("/latexToText", async (req, res) => {
   res.send(response.data);
 });
 
+router.post("/altTextDescription", async (req,res) => {
+  const {altText}=req.body;
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: `Generate detailed description: ${altText}`,
+    max_tokens: 100,
+    temperature: 0.3,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0,
+  });
+  res.send(response.data.choices[0].text);
+})
+
 // router.post("/visionMath/pdf", async (req, res) => {
 //   const { url } = req.body;
 //   const response = await axios.post(

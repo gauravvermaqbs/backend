@@ -41,7 +41,7 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
   const endpoint =
     "https://api.imagga.com/v2/colors";
   // const extract_object_colors='0' 
-
+  
   let response = await axios({
     method: "post",
     url: endpoint,
@@ -88,7 +88,7 @@ router.post("/color-contrast", upload.single("image"), async (req, res) => {
       }
     }
   }
-  res.send(contrast_report);
+  res.send({colors,contrast_report});
 });
 
 function pushIfNotExists(array, object) {

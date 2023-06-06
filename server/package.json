@@ -35,6 +35,7 @@
     "fs": "^0.0.1-security",
     "get-image-colors": "^4.0.1",
     "get-pixels": "^3.3.3",
+    "google-translate": "^3.0.0",
     "got": "^12.6.0",
     "jimp": "^0.22.7",
     "lodash": "^4.17.21",

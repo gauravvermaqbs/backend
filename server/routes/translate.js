@@ -2,8 +2,6 @@ const express = require("express");
 const { Configuration, OpenAIApi } = require("openai");
 const router = express.Router();
 const dotenv = require("dotenv");
-const translate = require("translate-google");
-const axios = require("axios");
 const api = process.env.GOOGLE_API;
 const googleTranslate = require("google-translate")(api);
 dotenv.config();
@@ -32,18 +30,6 @@ router.post("/translate", async (req, res) => {
 });
 router.post("/translate-google", async (req, res) => {
   const { message, language } = req.body;
-  // try {
-  //   const translation = await translate(message, {
-  //     from: "auto",
-  //     to: language,
-  //   });
-  //   let regex = /&( nbsp|amp|quot|lt|gt);/g;
-  //   let result = translation.replace(regex, "");
-  //   res.json(result);
-  // } catch (error) {
-  //   console.error("Translation error:", error);
-  //   res.status(500).json({ error: "An error occurred while translating." });
-  // }
   googleTranslate.translate(message, language, function (err, translation) {
     res.send(translation.translatedText);
   });

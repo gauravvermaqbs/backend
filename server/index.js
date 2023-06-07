@@ -13,10 +13,10 @@ app.options('*', cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8000;
 app.set("port", PORT);
 
-app.use((req, res, next) => {
+app.use((req, res, next) => {   
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });

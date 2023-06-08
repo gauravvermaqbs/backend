@@ -13,7 +13,7 @@ app.options('*', cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 10000;
 app.set("port", PORT);
 
 app.use((req, res, next) => {   

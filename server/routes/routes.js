@@ -316,7 +316,10 @@ router.post("/savedAlt", async (req, res) => {
       for(let i=0; i<jsonResult.image.length; i++){
         if(req.body.image.path===jsonResult.image[i]){
           // if(jsonResult.AltText[i]!=="")
-          return res.send(jsonResult.AltText[i])
+          setTimeout(() => {
+
+            return res.send(jsonResult.AltText[i])
+          },3000)
         }
       }
       // return res.send("error");

@@ -4,10 +4,14 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const upload = require("../multer/app.multer");
+const { Configuration, OpenAIApi } = require("openai");
+const csv = require('csv-parser');
+
 
 const Replicate = require("replicate");
 const axios = require("axios");
 const dotenv = require("dotenv");
+const { image } = require("@tensorflow/tfjs-node");
 dotenv.config();
 const cloudinary = require("cloudinary").v2;
 // const upload = require("../multer/app.multer")
@@ -68,7 +72,7 @@ router.post("/prediction", async function (req, res) {
         },
       }
     )
-    .then((respo) => { 
+    .then((respo) => {
       console.log(respo);
       res.status(200).json({ message: respo });
     })
@@ -170,6 +174,143 @@ router.post("/imageTag", async function (req, res) {
         status: -1,
         message: err,
       });
+    });
+});
+
+router.post(
+  "/generate-description",
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      // Get the path of the uploaded image file
+      const imagePath = req.file.path;
+
+      // Process the image using sharp
+      const processedImage = await sharp(imagePath)
+        .resize(224, 224) // Resize the image if needed
+        .toBuffer();
+
+      // Load the pre-trained COCO-SSD model
+      const model = await cocoSsd.load();
+
+      // Perform object detection on the processed image
+      const predictions = await model.detect(processedImage);
+
+      // Extract object labels from the predictions
+      const labels = predictions.map((prediction) => prediction.class);
+
+      // Create the image description
+      const description = `The image contains: ${labels.join(", ")}`;
+
+      // Send the description as the API response
+      res.json({ description });
+    } catch (error) {
+      console.error("Error generating description:", error);
+      res.status(500).json({
+        error: "An error occurred while generating the image description",
+      });
+    }
+  }
+);
+router.post("/shortDesc", async (req, res) => {
+  const { text } = req.body;
+  // console.log(arr)
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  // try {
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: `Generate short descripton in maximum 20 words from text: ${text}`,
+    max_tokens: 1000,
+    temperature: 0,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0,
+  });
+  res.send(response.data.choices[0].text);
+  // } catch (err) {
+  //   console.error(err);
+  // }
+});
+
+
+router.post("/longDesc", async (req, res) => {
+  const { text } = req.body;
+  // console.log(arr)
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  // try {
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: `Generate long descripton of 120 words from text: ${text}`,
+    max_tokens: 1000,
+    temperature: 0,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0,
+  });
+  res.send(response.data.choices[0].text);
+  // } catch (err) {
+  //   console.error(err);
+  // }
+});
+
+
+router.post("/description", async (req, res) => {
+  // const { image } = req.file;
+  // console.log(req.body)
+  // const configuration = new Configuration({
+  //   apiKey: process.env.OPENAI_API_KEY,
+  // });
+  // const openai = new OpenAIApi(configuration);
+  // // try {
+  // const response = await openai.createCompletion({
+  //   model: "text-davinci-003",
+  //   prompt: `Your task is to generate a long description of 120 words using alt text and tags Array as tagsArr given below delimited by < >.
+  //   In tags Array, iterate over each object and check key tag to generate long description.
+  //   Finally send the response in json format with long_description as key.
+  //   Alt Text: <${altText}>
+  //   TagsArr : <${tagsArr}>`,
+  //   max_tokens: 1000,
+  //   temperature: 0,
+  //   top_p: 1.0,
+  //   frequency_penalty: 0.0,
+  //   presence_penalty: 0.0,
+  // });
+  // res.send(response.data.choices[0].text);
+  // // } catch (err) {
+  // //   console.error(err);
+  // // }
+  const results = [];
+
+  fs.createReadStream("info.csv")
+    .pipe(csv())
+    .on("data", (data) => results.push(data))
+    .on("end", () => {
+      const jsonResult = {};
+
+      for (let i = 0; i < results.length; i++) {
+        const row = results[i];
+
+        for (const key in row) {
+          if (!jsonResult[key]) {
+            jsonResult[key] = [];
+          }
+
+          jsonResult[key].push(row[key]);
+        }
+      }
+
+      for(let i=0; i<jsonResult.image.length; i++){
+        if(req.body.image.path===jsonResult.image[i]){
+          res.send(jsonResult.Description[i])
+        }
+      }
+      // console.log(jsonResult)
     });
 });
 

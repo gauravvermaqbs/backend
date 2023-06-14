@@ -15,8 +15,9 @@ router.post("/assessmentCreator", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     // prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
-    prompt: `Create ${no_of_questions} best ${questionFormat} and answers from ${text} in ${formatType}.`,
-    // prompt:`You are a teacher with 10 years of experience, Generate 5 MCQs quickly in json format with questions as root object having fields in array as question, answers, correct_answer_index : ${text}`,
+    prompt: `Create ${no_of_questions} best ${questionFormat} and answers from ${text} in ${formatType}.`, 
+    // prompt:`You are a school teacher and you have to create assessment for kids, keep the difficulty level medium. You have to generate ${no_of_questions} ${questionFormat} questions from the text in the same format as give below in Json_format_example object which has an questions key and has an value array, put all questions in the array. Json_format_example and text is given below:
+    // \nText: ${text} \nJson_format_example:${formatType}`,
     max_tokens: 1500,
     temperature: temperature,
     top_p: 1.0,

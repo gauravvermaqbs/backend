@@ -261,30 +261,6 @@ router.post("/longDesc", async (req, res) => {
 
 
 router.post("/description", async (req, res) => {
-  // const { image } = req.file;
-  // console.log(req.body)
-  // const configuration = new Configuration({
-  //   apiKey: process.env.OPENAI_API_KEY,
-  // });
-  // const openai = new OpenAIApi(configuration);
-  // // try {
-  // const response = await openai.createCompletion({
-  //   model: "text-davinci-003",
-  //   prompt: `Your task is to generate a long description of 120 words using alt text and tags Array as tagsArr given below delimited by < >.
-  //   In tags Array, iterate over each object and check key tag to generate long description.
-  //   Finally send the response in json format with long_description as key.
-  //   Alt Text: <${altText}>
-  //   TagsArr : <${tagsArr}>`,
-  //   max_tokens: 1000,
-  //   temperature: 0,
-  //   top_p: 1.0,
-  //   frequency_penalty: 0.0,
-  //   presence_penalty: 0.0,
-  // });
-  // res.send(response.data.choices[0].text);
-  // // } catch (err) {
-  // //   console.error(err);
-  // // }
   const results = [];
 
   fs.createReadStream("info.csv")
@@ -307,9 +283,43 @@ router.post("/description", async (req, res) => {
 
       for(let i=0; i<jsonResult.image.length; i++){
         if(req.body.image.path===jsonResult.image[i]){
-          res.send(jsonResult.Description[i])
+          // if(jsonResult.Description[i]!=="")
+          return res.send(jsonResult.Description[i])
         }
       }
+      return res.send("error");
+      // console.log(jsonResult)
+    });
+});
+
+router.post("/savedAlt", async (req, res) => {
+  const results = [];
+
+  fs.createReadStream("info.csv")
+    .pipe(csv())
+    .on("data", (data) => results.push(data))
+    .on("end", () => {
+      const jsonResult = {};
+
+      for (let i = 0; i < results.length; i++) {
+        const row = results[i];
+
+        for (const key in row) {
+          if (!jsonResult[key]) {
+            jsonResult[key] = []; 
+          }
+
+          jsonResult[key].push(row[key]);
+        }
+      }
+
+      for(let i=0; i<jsonResult.image.length; i++){
+        if(req.body.image.path===jsonResult.image[i]){
+          // if(jsonResult.AltText[i]!=="")
+          return res.send(jsonResult.AltText[i])
+        }
+      }
+      // return res.send("error");
       // console.log(jsonResult)
     });
 });

@@ -14,7 +14,6 @@
     "@google-cloud/translate": "^7.2.1",
     "@google-cloud/vision": "^3.1.3",
     "@sendgrid/mail": "^7.7.0",
-    "@tensorflow/tfjs-node": "^4.7.0",
     "axios": "^1.3.4",
     "body-parser": "^1.20.2",
     "clarifai": "^2.9.1",
@@ -25,6 +24,7 @@
     "colorthief": "^2.4.0",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
+    "datauri": "^4.1.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "exif-parser": "^0.1.12",
@@ -39,6 +39,7 @@
     "get-pixels": "^3.3.3",
     "google-translate": "^3.0.0",
     "got": "^12.6.0",
+    "groupdocs-parser-cloud": "^22.12.0",
     "jimp": "^0.22.7",
     "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
@@ -56,6 +57,8 @@
     "translate-google": "^1.5.0",
     "wcag-contrast": "^3.0.0",
     "whisper": "^0.3.3",
-    "whisper-node": "^0.2.12"
+    "whisper-node": "^0.2.12",
+    "xlsx": "^0.18.5",
+    "xlsx-populate": "^1.21.0"
   }
 }

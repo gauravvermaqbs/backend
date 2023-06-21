@@ -11,7 +11,6 @@ const csv = require('csv-parser');
 const Replicate = require("replicate");
 const axios = require("axios");
 const dotenv = require("dotenv");
-const { image } = require("@tensorflow/tfjs-node");
 dotenv.config();
 const cloudinary = require("cloudinary").v2;
 // const upload = require("../multer/app.multer")

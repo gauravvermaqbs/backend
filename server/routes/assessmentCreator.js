@@ -50,15 +50,14 @@ router.post("/wisdomAPI", async (req, res) => {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     // prompt: `Step 1: Create mcq assessments from the article: ${text}. Step 2: Write generated mcq assessments in ${formatType}.`,
-    prompt: `Create ${no_of_questions} best ${questionFormat} and answers from ${text} in ${formatType} in ${language} language.`,
+    // prompt: `Create ${no_of_questions} best ${questionFormat} and answers from ${text} in ${formatType} in ${language} language.`,
     // prompt:`You are a school teacher and you have to create assessment for kids, keep the difficulty level medium. You have to generate ${no_of_questions} ${questionFormat} questions from the text in the same format as give below in Json_format_example object which has an questions key and has an value array, put all questions in the array. Json_format_example and text is given below:
     // \nText: ${text} \nJson_format_example:${formatType}`,
-    // prompt: prompt,
+    prompt: prompt,
     max_tokens: 2048,
-    temperature: 1,
+    temperature: 0.7,
     top_p: 1.0,
     frequency_penalty: 0,
-    presence_penalty: 0,
   });
   res.send(response.data.choices[0].text);
 });
